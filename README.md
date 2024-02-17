@@ -64,5 +64,4 @@ Nx comes with local caching already built-in (check your `nx.json`). On CI you m
 
 
 testing pipeline
-To make a new library
-nx g @nx/js:lib mongodb --directory=libs/mongodb --buildable
+testing jenkins 
