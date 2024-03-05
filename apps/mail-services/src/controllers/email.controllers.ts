@@ -295,3 +295,16 @@ export const updateEmail = async (req: Request, res: Response, next: NextFunctio
     }
 };
 
+
+
+export const storeMail = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        
+        console.log(req.user); 
+        const {emails } = req.body;
+        if(!emails) return next(new Apperror("Emails not found", 400)); 
+        return new ApiResponse(res, 200, "Emails stored successfully" , {emails});
+    } catch (error) {
+        return next(new Apperror(error.message, 400));
+    }
+}
