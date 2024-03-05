@@ -23,7 +23,7 @@ services:
       - backend
 
   mail-service:
-    container_name: "mail-services"
+    container_name: "mail-service"
     build:
       context: .
       dockerfile: ./apps/mail-services/Dockerfile
