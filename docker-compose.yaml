@@ -47,5 +47,17 @@ services:
     networks:
       - backend
 
+  extract-service:
+    container_name: "extract-service"
+    build:
+      context: ./apps/extract-service
+      dockerfile: Dockerfile
+
+    environment:
+      - MONGO_URL=${MONGO_URL}
+    
+    networks:
+      - backend
+
 networks:
   backend:
