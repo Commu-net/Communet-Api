@@ -1,7 +1,7 @@
 {
   "version": 3,
   "sources": ["../../../../../../libs/utils/src/index.ts"],
-  "sourcesContent": ["export * from './lib/utils';\n"],
+  "sourcesContent": ["export * from './lib/utils';\r\n"],
   "mappings": ";;;;;;;;;;;;;;AAAA;AAAA;AAAA,wBAAc,wBAAd;",
   "names": []
 }
