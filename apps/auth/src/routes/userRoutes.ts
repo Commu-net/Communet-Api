@@ -33,5 +33,6 @@ router.route("/logout")
 
 router.route("/getuser")
     .get(getUserData);
+    
 
 export default router;

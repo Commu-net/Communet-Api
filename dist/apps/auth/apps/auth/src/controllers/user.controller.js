@@ -37,6 +37,7 @@ __export(user_controller_exports, {
 module.exports = __toCommonJS(user_controller_exports);
 var import_passport = __toESM(require("passport"));
 var import_utils = require("@auth/utils");
+var import_mongo = require("@auth/mongo");
 const authGoogle = async (req, res, next) => {
   try {
     import_passport.default.authenticate("google", {
@@ -103,22 +104,17 @@ const logout = (req, res, next) => {
     return next(new import_utils.Apperror(error.message, 400));
   }
 };
-const getUserData = (req, res, next) => {
+const getUserData = async (req, res, next) => {
+  const token = req.headers.authorization.split(" ")[1];
+  console.log(token);
   try {
-    if (req.user) {
-      console.log(req.user);
-      const user = req.user;
-      const data = {
-        name: user.name,
-        email: user.email,
-        googleId: user.googleId
-      };
-      return new import_utils.ApiResponse(res, 200, "Success", data);
-    } else {
-      return new import_utils.ApiResponse(res, 400, "failure", { message: "No user data" });
+    const user = await import_mongo.User.findOne({ sub: token });
+    if (!user) {
+      return next(new import_utils.Apperror("Error you are not Authenticated", 400));
     }
+    return new import_utils.ApiResponse(res, 200, "Success", user);
   } catch (error) {
-    return next(new import_utils.Apperror(error.message, 400));
+    return next(new import_utils.Apperror("Error you are not Authenticated", 400));
   }
 };
 // Annotate the CommonJS export names for ESM import in node:

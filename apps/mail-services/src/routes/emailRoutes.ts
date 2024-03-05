@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { Request, Response } from "express";
 
-import { getAllEmail, sendMail , sendMass , addEmail, removeEmail , updateEmail} from "../controllers/email.controllers";
+import { getAllEmail, sendMail , sendMass , addEmail, removeEmail , updateEmail, storeMail} from "../controllers/email.controllers";
 
 import { authMiddleWare } from "@auth/ErrorMiddleware";
 const router: Router = Router();
@@ -21,6 +21,9 @@ router.route("/mail")
                     .post(addEmail)
                     .delete(removeEmail)
                     .put(updateEmail);
+
+router.route("/store-mail")
+    .post( storeMail);
 
 
 export default router;

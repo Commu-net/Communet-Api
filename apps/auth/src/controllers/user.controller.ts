@@ -3,6 +3,7 @@ import passport, { AuthenticateOptions } from "passport";
 import {Request , Response , NextFunction, urlencoded} from "express"; 
 
 import { ApiResponse, Apperror } from "@auth/utils";
+import { User, userInterface } from "@auth/mongo";
 
 interface AuthOptions extends AuthenticateOptions{
     accessType? : string,
@@ -100,24 +101,25 @@ const logout = (req: any, res: Response, next: NextFunction) => {
 
 
 
-const getUserData = (req : any , res : Response, next : NextFunction ) => { 
+const getUserData = async (req : any , res : Response, next : NextFunction ) => { 
+    const token = req.headers.authorization.split(" ")[1];
+    console.log(token) 
+    
+    
     try {
-        if(req.user) {
-            console.log(req.user) ;
-            const user = req.user;
-            const data = {
-                name : user.name,
-                email : user.email,
-                googleId : user.googleId
-            }
-            return new ApiResponse(res , 200 , "Success" , data);
-        }else{
-            return new ApiResponse(res , 400 , "failure" , {message : "No user data"});
-        }
+        const user :userInterface = await User.findOne({sub : token});
+        if (!user )  {
+            return next(new Apperror("Error you are not Authenticated" , 400));
+        }       
+        return new ApiResponse(res , 200 , "Success" , user);
+    
     } catch (error :any) {
-        return next(new Apperror(error.message , 400));
+        return next(new Apperror("Error you are not Authenticated" , 400));
     }
 }
+
+
+
 
 export  {
     authGoogle , googleCallback ,
