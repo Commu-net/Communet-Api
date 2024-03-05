@@ -22,7 +22,7 @@ async def parse_emails(file : UploadFile = Form(...), user_id : Optional[str] = 
         if extension == 'csv':
             pass
         else:
-            await extract_excel(file, user_email ,user_id )
+            await extract_excel(file, user_email )
 
         return JSONResponse({"message": "Received"})
 

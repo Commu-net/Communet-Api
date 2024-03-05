@@ -7,7 +7,6 @@ load_dotenv(dotenv_path="./../.env")
 
 URI = environ.get("MONGO_URL")
 
-print(URI)
 client = motor.motor_asyncio.AsyncIOMotorClient(URI)
 print('Connected to MongoDB...')
 

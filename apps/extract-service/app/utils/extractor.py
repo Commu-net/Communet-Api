@@ -9,16 +9,21 @@ import os
 
 chunk_size = 1024 * 1024
 
-async def extract_excel(file : UploadFile ,  user_email : str , user_id : Optional[str] = None ,) -> int | None:
+async def extract_excel(file : UploadFile ,  user_email : str) -> int | None:
     
     file_extension = file.filename.split('.')[-1]
     fileid = f'{uuid.uuid1()}.{file_extension}'
     
     global chunk_size
     
+    if user_email is None :
+        
+        raise ValueError("user email not found")
+    
     company_names : list[str] = []
     names : list[str] = []
     emails : list[str] = []
+    
     with open(f'./upload/{fileid}','wb+') as f:
         num_chunks = ceil(file.size / chunk_size)
         num_chunks_remaining = num_chunks
@@ -71,9 +76,8 @@ async def extract_excel(file : UploadFile ,  user_email : str , user_id : Option
         names = ['' for _ in range(0 , len(emails)) ] 
     
     os.remove(f'./upload/{fileid}')
-    print(emails)
-    print(names)
-    await operations.insertEmails(emails,names,company_names)
+  
+    await operations.insertEmails(emails,names,company_names,user_email)
     
 
               

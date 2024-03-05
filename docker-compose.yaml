@@ -9,22 +9,16 @@ services:
       - "80:80"
     networks:
       - backend
-
+    env_file:
+      - .env
+    
   auth-service:
     container_name: "auth-service"
     build:
       dockerfile: ./apps/auth/Dockerfile
       context: .
-    
-    environment:
-      - CLIENT_URL=${CLIENT_URL}
-      - MONGO_URL=${MONGO_URL}
-      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
-      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
-      - SESSION_SECRET=${SESSION_SECRET}
-      - HOST=0.0.0.0
-      - DOMAIN=${DOMAIN}
-    
+    env_file:
+      - .env
     networks:
       - backend
 
@@ -33,17 +27,8 @@ services:
     build:
       context: .
       dockerfile: ./apps/mail-services/Dockerfile
-    
-    environment:
-      - CLIENT_URL=${CLIENT_URL}
-      - MONGO_URL=${MONGO_URL}
-      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
-      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
-      - SESSION_SECRET=${SESSION_SECRET}
-      - EMAIL_PORT=${EMAIL_PORT}
-      - HOST=0.0.0.0
-      - TEMP_FILE=/app/apps/mail-services/src/temp/
-
+    env_file:
+      - .env
     networks:
       - backend
 
@@ -52,10 +37,8 @@ services:
     build:
       context: ./apps/extract-service
       dockerfile: Dockerfile
-
-    environment:
-      - MONGO_URL=${MONGO_URL}
-    
+    env_file:
+      - .env
     networks:
       - backend
 
