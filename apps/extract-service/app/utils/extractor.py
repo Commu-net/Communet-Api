@@ -37,7 +37,13 @@ async def extract_excel(file : UploadFile ,  user_email : str) -> int | None:
         
     with open(f'./upload/{fileid}','rb+') as f:
         
-        df = pd.read_excel(f'./upload/{fileid}')
+        df = None
+        
+        if file_extension == 'csv':
+            df = pd.read_csv(f'./upload/{fileid}')
+        
+        else :
+            df = pd.read_excel(f'./upload/{fileid}')
         
         df.fillna(value=str(''),inplace=True)
         

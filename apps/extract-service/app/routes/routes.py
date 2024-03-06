@@ -19,10 +19,7 @@ async def parse_emails(file : UploadFile = Form(...), user_id : Optional[str] = 
         if extension not in supported_extensions:
             return JSONResponse(content={"message": "Format not supported"}, status_code=401)
 
-        if extension == 'csv':
-            pass
-        else:
-            await extract_excel(file, user_email )
+        await extract_excel(file,user_email)
 
         return JSONResponse({"message": "Received"})
 
