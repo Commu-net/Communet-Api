@@ -4,6 +4,7 @@ import {Request , Response , NextFunction, urlencoded} from "express";
 
 import { ApiResponse, Apperror } from "@auth/utils";
 import { User, userInterface } from "@auth/mongo";
+import { Console } from "console";
 
 interface AuthOptions extends AuthenticateOptions{
     accessType? : string,
@@ -42,17 +43,17 @@ const googleCallback  =  (req : Request ,res : Response , next : NextFunction ) 
 
 const googleSuccess = (req : any , res : Response , next : NextFunction ) => {
     try {
-        console.log(req.user);
+        // console.log(req.user);
         const data = {
             email : req.user.email,
             name : req.user.name,
-            picture : req.user.picture
+            sub : req.user.sub
         }   
 
         const queryString = Object.entries(data).map(([key, val]) => `${key}=${encodeURIComponent(val)}`).join('&');
 
-        console.log(queryString);
-        res.redirect(`${process.env.CLIENT_URL}?${queryString}`);
+        return res.redirect(`${process.env.CLIENT_URL}?${queryString}`);
+    
 
     } catch (error : any) {
         return next (new Apperror(error.message , 400));
@@ -102,9 +103,10 @@ const logout = (req: any, res: Response, next: NextFunction) => {
 
 
 const getUserData = async (req : any , res : Response, next : NextFunction ) => { 
-    const token = req.headers.authorization.split(" ")[1];
-    console.log(token) 
-    
+    if (!req.headers.authorization) return next(new Apperror("Error you are not Authenticated" , 400));
+    // console.log(req.headers.authorization)
+    let token = req.headers.authorization.split(" ")[1];
+    if(!token) token = req.headers.authorization.split(" ")[0];
     
     try {
         const user :userInterface = await User.findOne({sub : token});

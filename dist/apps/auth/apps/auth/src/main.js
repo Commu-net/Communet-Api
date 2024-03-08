@@ -64,8 +64,6 @@ import_passport.default.use(new import_passport_google_oauth2.Strategy(
   async function(request, accessToken, refreshToken, profile, done) {
     try {
       const ifuserExists = await import_mongo2.User.findOne({ googleId: profile.id });
-      console.log(refreshToken);
-      console.log(accessToken);
       if (ifuserExists) {
         ifuserExists.acessToken = accessToken;
         ifuserExists.rToken = refreshToken;
@@ -92,9 +90,11 @@ import_passport.default.use(new import_passport_google_oauth2.Strategy(
   }
 ));
 import_passport.default.serializeUser(function(user, done) {
+  console.log(user._id, "serial");
   done(null, user._id);
 });
 import_passport.default.deserializeUser(async function(id, done) {
+  console.log(id, "deserial");
   const user = await import_mongo2.User.findById(id);
   if (user) {
     return done(null, user);

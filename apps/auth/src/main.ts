@@ -56,12 +56,12 @@ passport.use(new GoogleStrategy({
   async function(request: Request, accessToken: string, refreshToken: string, profile: any, done: VerifyCallback) {
     try {
       const ifuserExists = await User.findOne({ googleId: profile.id });
-      console.log(refreshToken);
-      console.log(accessToken);
+
       if (ifuserExists) {
         ifuserExists.acessToken = accessToken;
         ifuserExists.rToken = refreshToken;
         await ifuserExists.save();
+
         done(null, ifuserExists);
       } else {
         const user = await User.create({
@@ -85,10 +85,12 @@ passport.use(new GoogleStrategy({
 ));
 
 passport.serializeUser(function(user: any, done: (error: any, id?: any) => void) {
+  console.log(user._id , "serial")
   done(null, user._id);
 });
 
 passport.deserializeUser(async function(id: any, done: (error: any, user?: any) => void) {
+  console.log(id , "deserial")
   const user = await User.findById(id);
   if (user) {
     return done(null, user);

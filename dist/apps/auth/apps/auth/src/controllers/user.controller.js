@@ -61,15 +61,13 @@ const googleCallback = (req, res, next) => {
 };
 const googleSuccess = (req, res, next) => {
   try {
-    console.log(req.user);
     const data = {
       email: req.user.email,
       name: req.user.name,
-      picture: req.user.picture
+      sub: req.user.sub
     };
     const queryString = Object.entries(data).map(([key, val]) => `${key}=${encodeURIComponent(val)}`).join("&");
-    console.log(queryString);
-    res.redirect(`${process.env.CLIENT_URL}?${queryString}`);
+    return res.redirect(`${process.env.CLIENT_URL}?${queryString}`);
   } catch (error) {
     return next(new import_utils.Apperror(error.message, 400));
   }
@@ -105,8 +103,11 @@ const logout = (req, res, next) => {
   }
 };
 const getUserData = async (req, res, next) => {
-  const token = req.headers.authorization.split(" ")[1];
-  console.log(token);
+  if (!req.headers.authorization)
+    return next(new import_utils.Apperror("Error you are not Authenticated", 400));
+  let token = req.headers.authorization.split(" ")[1];
+  if (!token)
+    token = req.headers.authorization.split(" ")[0];
   try {
     const user = await import_mongo.User.findOne({ sub: token });
     if (!user) {
