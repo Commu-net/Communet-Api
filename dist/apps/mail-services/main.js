@@ -203,6 +203,7 @@ const addEmail = (req, res, next) => tslib_1.__awaiter(void 0, void 0, void 0, f
         const user = yield mongo_1.User.findOne({ email: userEmail });
         if (!user)
             return next(new utils_1.Apperror("no user found", 404));
+        console.log(data);
         for (const value of data) {
             let email = yield mongo_1.Email.findOne({ email: value.email });
             if (!email) {
@@ -576,7 +577,8 @@ const cors_1 = tslib_1.__importDefault(__webpack_require__(20));
 const app = (0, express_1.default)();
 (0, mongo_1.connectToDb)();
 const corsOptions = {
-    origin: ["chrome-extension://ifonkoabimjngaeomelmfaifpaojiofb", "https://commu-net.vercel.app"],
+    origin: ["chrome-extension://ifonkoabimjngaeomelmfaifpaojiofb",
+        "https://commu-net.vercel.app"],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     optionsSuccessStatus: 200
 };

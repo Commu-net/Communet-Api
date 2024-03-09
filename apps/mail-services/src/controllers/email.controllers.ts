@@ -183,7 +183,8 @@ export const getAllEmail = async (req: Request, res: Response, next: NextFunctio
 interface dataInterface {
     email : string,
     currentDesignation? : string,
-    name : string
+    name : string,
+    company? : string
 }
 
 type postData = dataInterface;
@@ -198,6 +199,7 @@ export const addEmail = async (req: Request, res: Response, next: NextFunction) 
         const user: userInterface | null = await User.findOne({ email: userEmail });
 
         if (!user) return next(new Apperror("no user found", 404));
+        console.log(data);
         for (const value of data) {
             
             let email: emailInterface | null = await Email.findOne({ email: value.email });

@@ -22,7 +22,8 @@ const app : Express = express();
 connectToDb();
 
 const corsOptions = {
-  origin: ["chrome-extension://ifonkoabimjngaeomelmfaifpaojiofb","https://commu-net.vercel.app"],
+  origin: ["chrome-extension://ifonkoabimjngaeomelmfaifpaojiofb",
+  "https://commu-net.vercel.app"],
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   optionsSuccessStatus: 200
 };
