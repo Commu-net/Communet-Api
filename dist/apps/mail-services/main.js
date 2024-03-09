@@ -257,7 +257,8 @@ const updateEmail = (req, res, next) => tslib_1.__awaiter(void 0, void 0, void 0
         const data = {
             email: req.body.email,
             currentDesignation: req.body.currentDesignation,
-            name: req.body.name
+            name: req.body.name,
+            company: req.body.company
         };
         const user = yield mongo_1.User.findOne({ email: userEmail });
         const email = yield mongo_1.Email.findOne({ email: data.email });

@@ -263,7 +263,8 @@ export const updateEmail = async (req: Request, res: Response, next: NextFunctio
         const data = {
             email: req.body.email as string,
             currentDesignation: req.body.currentDesignation as string,
-            name: req.body.name as string
+            name: req.body.name as string,
+            company : req.body.company as string
         }
 
         const user: userInterface | null = await User.findOne({ email: userEmail });
