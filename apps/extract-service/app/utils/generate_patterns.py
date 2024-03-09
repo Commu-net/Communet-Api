@@ -1,4 +1,4 @@
-from utils.validator import verify_email
+from utils.validator import verify_email , verify_emails_optimised
 import dns.resolver
 import asyncio
 
@@ -26,6 +26,7 @@ def check_mails(emails : list):
             result = verify_email(email)
             if result == True :
                 valid_emails.append(email)
+        # valid_emails = verify_emails_optimised(emails , valid_emails)
     except dns.resolver.NoAnswer as e :
             print(e)
             return valid_emails 

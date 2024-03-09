@@ -40,7 +40,7 @@ async def verify_email(payload : VerifyEmailModel) -> JSONResponse :
     # print(3)
     
     if len(valid_emails) == 0 :
-        return JSONResponse({"message" : "Cant generate valid emails from given information"} , status_code=200)
+        return JSONResponse({"message" : "Cant generate valid emails from given information"} , status_code=401)
     
     name = f"{payload.first_name} {payload.last_name}"
     
