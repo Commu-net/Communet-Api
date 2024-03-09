@@ -5,6 +5,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
+app.include_router(router)
+
 origins = [
     "chrome-extension://ifonkoabimjngaeomelmfaifpaojiofb",
     "https://commu-net.vercel.app"
@@ -18,7 +20,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(router)
+
 
 
 if __name__ == '__main__':

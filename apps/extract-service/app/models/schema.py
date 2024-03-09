@@ -1,4 +1,4 @@
-from typing import List
+from typing import List , Optional
 from pydantic import BaseModel, Field
 from datetime import datetime
 
@@ -18,9 +18,9 @@ class UserModel(BaseModel):
 class EmailModel(BaseModel):
     email: str
     name: str
-    currentDesignation: str
+    currentDesignation: Optional[str] = Field(default="")
     addedOn: datetime = Field(default=datetime.now())
-    company: str
+    company: Optional[str] = Field(default="")
 
 
     class Config:

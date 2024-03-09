@@ -9,7 +9,7 @@ from db.operations import insertValidatedMails
 router = APIRouter()
 
 @router.post("/api/v1/parser")
-async def parse_emails(file : UploadFile = Form(...), user_id : Optional[str] = None , user_email : str = Form(...)) -> JSONResponse:
+async def parse_emails(user_email : str = Form(), file : UploadFile = Form()) -> JSONResponse:
     try:
 
         supported_extensions = {'xls', 'xlsx', 'xlsm', 'xlsb', 'odf', 'ods', 'odt' , 'csv'}
