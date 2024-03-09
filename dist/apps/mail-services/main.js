@@ -411,6 +411,9 @@ const emailModel = new mongoose_1.default.Schema({
     addedOn: {
         type: Date,
         default: Date.now()
+    },
+    company: {
+        type: String,
     }
 });
 const User = mongoose_1.default.model("User", userModel);
@@ -573,7 +576,7 @@ const cors_1 = tslib_1.__importDefault(__webpack_require__(20));
 const app = (0, express_1.default)();
 (0, mongo_1.connectToDb)();
 const corsOptions = {
-    origin: 'https://commu-net.vercel.app',
+    origin: ["chrome-extension://ifonkoabimjngaeomelmfaifpaojiofb", "https://commu-net.vercel.app"],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     optionsSuccessStatus: 200
 };

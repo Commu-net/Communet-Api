@@ -20,6 +20,8 @@ class EmailModel(BaseModel):
     name: str
     currentDesignation: str
     addedOn: datetime = Field(default=datetime.now())
+    company: str
+
 
     class Config:
         populate_by_name = True

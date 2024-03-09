@@ -64,6 +64,9 @@ const emailModel = new mongoose_1.default.Schema({
     addedOn: {
         type: Date,
         default: Date.now()
+    },
+    company: {
+        type: String,
     }
 });
 const User = mongoose_1.default.model("User", userModel);

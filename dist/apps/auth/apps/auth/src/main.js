@@ -37,7 +37,7 @@ import_dotenv.default.config({
 (0, import_mongo.connectToDb)();
 const app = (0, import_express.default)();
 const corsOptions = {
-  origin: "chrome-extension://ifonkoabimjngaeomelmfaifpaojiofb",
+  origin: ["chrome-extension://ifonkoabimjngaeomelmfaifpaojiofb", "https://commu-net.vercel.app"],
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   optionsSuccessStatus: 200
 };
@@ -114,4 +114,3 @@ const port = process.env.AUTH_PORT ? Number(process.env.AUTH_PORT) : 4e3;
 app.listen(port, host, () => {
   console.log(`[ ready ] http://${host}:${port}`);
 });
-//# sourceMappingURL=main.js.map

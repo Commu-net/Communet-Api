@@ -70,6 +70,9 @@ const emailModel = new mongoose.Schema({
     addedOn :{
         type : Date,
         default : Date.now()
+    },
+    company : {
+        type : String, 
     }
 })
 interface userI extends mongoose.Document {

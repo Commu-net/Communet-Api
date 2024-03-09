@@ -1,8 +1,22 @@
 from fastapi import FastAPI 
 from routes.routes import router
 import uvicorn
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+origins = [
+    "chrome-extension://ifonkoabimjngaeomelmfaifpaojiofb",
+    "https://commu-net.vercel.app"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["GET,HEAD,PUT,PATCH,POST,DELETE"],
+    allow_headers=["*"],
+)
 
 app.include_router(router)
 

@@ -114,16 +114,19 @@ declare const Email: mongoose.Model<{
     addedOn: Date;
     name?: string | null | undefined;
     currentDesignation?: string | null | undefined;
+    company?: string | null | undefined;
 }, {}, {}, {}, mongoose.Document<unknown, {}, {
     email: string;
     addedOn: Date;
     name?: string | null | undefined;
     currentDesignation?: string | null | undefined;
+    company?: string | null | undefined;
 }> & {
     email: string;
     addedOn: Date;
     name?: string | null | undefined;
     currentDesignation?: string | null | undefined;
+    company?: string | null | undefined;
 } & {
     _id: mongoose.Types.ObjectId;
 }, mongoose.Schema<any, mongoose.Model<any, any, any, any, any, any>, {}, {}, {}, {}, mongoose.DefaultSchemaOptions, {
@@ -131,16 +134,19 @@ declare const Email: mongoose.Model<{
     addedOn: Date;
     name?: string | null | undefined;
     currentDesignation?: string | null | undefined;
+    company?: string | null | undefined;
 }, mongoose.Document<unknown, {}, mongoose.FlatRecord<{
     email: string;
     addedOn: Date;
     name?: string | null | undefined;
     currentDesignation?: string | null | undefined;
+    company?: string | null | undefined;
 }>> & mongoose.FlatRecord<{
     email: string;
     addedOn: Date;
     name?: string | null | undefined;
     currentDesignation?: string | null | undefined;
+    company?: string | null | undefined;
 }> & {
     _id: mongoose.Types.ObjectId;
 }>>;

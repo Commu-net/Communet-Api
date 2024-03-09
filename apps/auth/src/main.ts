@@ -23,11 +23,10 @@ connectToDb();
 const app: Express = express();
 
 const corsOptions = {
-  origin: "chrome-extension://ifonkoabimjngaeomelmfaifpaojiofb",
-  
+  origin: ["chrome-extension://ifonkoabimjngaeomelmfaifpaojiofb","https://commu-net.vercel.app"],
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   optionsSuccessStatus: 200
-}
+};
 
 app.use(cors(corsOptions));
 

@@ -94,6 +94,9 @@ const emailModel = new import_mongoose.default.Schema({
   addedOn: {
     type: Date,
     default: Date.now()
+  },
+  company: {
+    type: String
   }
 });
 const User = import_mongoose.default.model("User", userModel);
@@ -103,4 +106,3 @@ const Email = import_mongoose.default.model("Email", emailModel);
   Email,
   User
 });
-//# sourceMappingURL=user.model.js.map
