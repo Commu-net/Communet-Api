@@ -163,7 +163,7 @@ async function sendOneMail(mail: string, senderMail: string, fileNames: string[]
     }
 }
 
-export const getAllEmail = async (req: Request, res: Response, next: NextFunction) => {
+export const getAllEmail = async (req: Request, res: Response, next: NextFunction) => { 
     try {
         const userEmail: any = req.query.userEmail;
 
@@ -310,11 +310,18 @@ export const updateEmail = async (req: Request, res: Response, next: NextFunctio
 
 export const storeMail = async (req: Request, res: Response, next: NextFunction) => {
     try {
+        const token= req.headers.authorization.split(" ")[1];
+        const user: userInterface  = await User.findOne({
+            sub: token
+        }); 
+        if (!user) {
+            return next(new Apperror("User not found", 404));
+        }
+        const {emails } = req.body;
+        if(!emails) return next(new Apperror("Emails not found", 400)); 
+        user.emailSelected = emails;
 
-        console.log(req.user);
-        const { emails } = req.body;
-        if (!emails) return next(new Apperror("Emails not found", 400));
-        return new ApiResponse(res, 200, "Emails stored successfully", { emails });
+        return new ApiResponse(res, 200, "Emails stored successfully" , {emails , user});
     } catch (error) {
         return next(new Apperror(error.message, 400));
     }

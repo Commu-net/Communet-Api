@@ -45,7 +45,8 @@ const userModel = new  mongoose.Schema({
 
     emailSelected: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Email'
+        ref: 'Email', 
+        unique : true
     }]
     
 });
@@ -88,7 +89,7 @@ interface userI extends mongoose.Document {
     id?:string,
     emailSelected? : mongoose.Schema.Types.ObjectId[] | null
 }
-
+    
 interface emailI extends mongoose.Document {
     email: string;
     name?: string;
