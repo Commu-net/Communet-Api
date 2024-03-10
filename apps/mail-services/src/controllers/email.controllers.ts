@@ -323,9 +323,10 @@ export const storeMail = async (req: Request, res: Response, next: NextFunction)
         
         for(const email of emails){
             const emailCreated : emailInterface = await Email.create({email : email});
-            user.emailSelected.push(emailCreated._id);
+            if (!user.emailSelected.includes(emailCreated._id)) {
+                user.emailSelected.push(emailCreated._id);
+            }
         }
-
         await user.save();
 
         return new ApiResponse(res, 200, "Emails stored successfully" , {emails , user});
