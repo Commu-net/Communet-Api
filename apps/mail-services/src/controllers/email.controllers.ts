@@ -125,7 +125,18 @@ async function sendOneMail(mail: string, senderMail: string, fileNames: string[]
             process.env.GOOGLE_CLIENT_SECRET,
             // process.env.CLIENT_URL
         );
-
+        
+        oauth2Client.on('tokens', async (tokens) => {
+            if (tokens.refresh_token) {
+                // store the refresh_token in the user's record in your database
+                user.rToken = tokens.refresh_token;
+            }
+            if (tokens.access_token) {
+                // store the access_token in the user's record in your database
+                user.acessToken = tokens.access_token;
+            }
+            await user.save();
+        });
 
         oauth2Client.setCredentials({
             access_token: user.acessToken,

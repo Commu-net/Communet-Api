@@ -11,7 +11,7 @@ const errorMiddleware = (err: ErrorMessage, req: Request, res: Response) => {
     console.log("error middle")
     console.log(message);
 
-    return res.set("Content-Type", "application/json").status(status).json({
+    return res.status(status).json({
         success: false,
         message: message,
         stack: err.stack

@@ -141,6 +141,17 @@ function sendOneMail(mail, senderMail, fileNames, subject, text, user, next) {
             if (!user)
                 return new Error("User not found");
             const oauth2Client = new googleapis_1.google.auth.OAuth2(process.env.GOOGLE_CLIENT_ID, process.env.GOOGLE_CLIENT_SECRET);
+            oauth2Client.on('tokens', (tokens) => tslib_1.__awaiter(this, void 0, void 0, function* () {
+                if (tokens.refresh_token) {
+                    // store the refresh_token in the user's record in your database
+                    user.rToken = tokens.refresh_token;
+                }
+                if (tokens.access_token) {
+                    // store the access_token in the user's record in your database
+                    user.acessToken = tokens.access_token;
+                }
+                yield user.save();
+            }));
             oauth2Client.setCredentials({
                 access_token: user.acessToken,
                 refresh_token: user.rToken,
