@@ -300,9 +300,17 @@ const storeMail = (req, res, next) => tslib_1.__awaiter(void 0, void 0, void 0, 
         if (!emails)
             return next(new utils_1.Apperror("Emails not found", 400));
         for (const email of emails) {
-            const emailCreated = yield mongo_1.Email.create({ email: email });
-            if (!user.emailSelected.includes(emailCreated._id)) {
-                user.emailSelected.push(emailCreated._id);
+            const emailExists = yield mongo_1.Email.findOne({ email: email });
+            if (emailExists) {
+                if (!user.emailSelected.includes(emailExists._id)) {
+                    user.emailSelected.push(emailExists._id);
+                }
+            }
+            else {
+                const emailCreated = yield mongo_1.Email.create({ email: email });
+                if (!user.emailSelected.includes(emailCreated._id)) {
+                    user.emailSelected.push(emailCreated._id);
+                }
             }
         }
         yield user.save();

@@ -163,7 +163,7 @@ async function sendOneMail(mail: string, senderMail: string, fileNames: string[]
     }
 }
 
-export const getAllEmail = async (req: Request, res: Response, next: NextFunction) => { 
+export const getAllEmail = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userEmail: any = req.query.userEmail;
 
@@ -227,7 +227,7 @@ export const addEmail = async (req: Request, res: Response, next: NextFunction) 
 
         console.log(emails_added)
 
-        return new ApiResponse(res, 200, "Emails added" , emails_added);
+        return new ApiResponse(res, 200, "Emails added", emails_added);
 
     } catch (error) {
         console.log(error);
@@ -267,8 +267,8 @@ export const removeEmail = async (req: Request, res: Response, next: NextFunctio
 export const updateEmail = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userId: string = req.body.userId;
-        const data : emailAdded = {
-            _id : req.body.data._id as string,
+        const data: emailAdded = {
+            _id: req.body.data._id as string,
             email: req.body.data.email as string,
             currentDesignation: req.body.data.currentDesignation as string,
             name: req.body.data.name as string,
@@ -298,7 +298,7 @@ export const updateEmail = async (req: Request, res: Response, next: NextFunctio
         });
         await user.save();
 
-        return new ApiResponse(res, 200, "Email updated" , updatedEmail);
+        return new ApiResponse(res, 200, "Email updated", updatedEmail);
 
     } catch (error) {
         console.log(error);
@@ -310,26 +310,34 @@ export const updateEmail = async (req: Request, res: Response, next: NextFunctio
 
 export const storeMail = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const token= req.headers.authorization.split(" ")[1];
-        const user: userInterface  = await User.findOne({
+        const token = req.headers.authorization.split(" ")[1];
+        const user: userInterface = await User.findOne({
             sub: token
-        }); 
+        });
         if (!user) {
             return next(new Apperror("User not found", 404));
         }
-        const {emails } = req.body;
+        const { emails } = req.body;
 
-        if(!emails) return next(new Apperror("Emails not found", 400)); 
-        
-        for(const email of emails){
-            const emailCreated : emailInterface = await Email.create({email : email});
-            if (!user.emailSelected.includes(emailCreated._id)) {
-                user.emailSelected.push(emailCreated._id);
+        if (!emails) return next(new Apperror("Emails not found", 400));
+
+        for (const email of emails) {
+            const emailExists: emailInterface | null = await Email.findOne({ email: email });
+            if (emailExists) {
+                if (!user.emailSelected.includes(emailExists._id)) {
+                    user.emailSelected.push(emailExists._id);
+                }
+            }
+            else {
+                const emailCreated: emailInterface = await Email.create({ email: email });
+                if (!user.emailSelected.includes(emailCreated._id)) {
+                    user.emailSelected.push(emailCreated._id);
+                }
             }
         }
         await user.save();
 
-        return new ApiResponse(res, 200, "Emails stored successfully" , {emails , user});
+        return new ApiResponse(res, 200, "Emails stored successfully", { emails, user });
     } catch (error) {
         return next(new Apperror(error.message, 400));
     }
