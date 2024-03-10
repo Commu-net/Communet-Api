@@ -41,7 +41,8 @@ const userModel = new mongoose_1.default.Schema({
     },
     emailSelected: [{
             type: mongoose_1.default.Schema.Types.ObjectId,
-            ref: 'Email'
+            ref: 'Email',
+            unique: true
         }]
 });
 const emailModel = new mongoose_1.default.Schema({
@@ -49,7 +50,8 @@ const emailModel = new mongoose_1.default.Schema({
         type: String,
         maxlength: 50,
         required: true,
-        trim: true
+        trim: true,
+        unqiue: true
     },
     name: {
         type: String,

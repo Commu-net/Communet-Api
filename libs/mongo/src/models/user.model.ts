@@ -56,7 +56,8 @@ const emailModel = new mongoose.Schema({
         type : String,
         maxlength : 50,
         required : true,
-        trim : true
+        trim : true,
+        unqiue : true
     },
     name : {
         type : String,

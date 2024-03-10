@@ -183,7 +183,7 @@ export const getAllEmail = async (req: Request, res: Response, next: NextFunctio
 interface dataInterface {
     email: string,
     currentDesignation?: string,
-    name: string,
+    name?: string,
     company?: string
 }
 
@@ -318,8 +318,15 @@ export const storeMail = async (req: Request, res: Response, next: NextFunction)
             return next(new Apperror("User not found", 404));
         }
         const {emails } = req.body;
+
         if(!emails) return next(new Apperror("Emails not found", 400)); 
-        user.emailSelected = emails;
+        
+        for(const email of emails){
+            const emailCreated : emailInterface = await Email.create({email : email});
+            user.emailSelected.push(emailCreated._id);
+        }
+
+        await user.save();
 
         return new ApiResponse(res, 200, "Emails stored successfully" , {emails , user});
     } catch (error) {
