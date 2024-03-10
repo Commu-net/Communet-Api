@@ -9,12 +9,13 @@ import * as path from 'path';
 import { Express} from "express";
 import dotenv from 'dotenv';
 import router from './routes/emailRoutes';
-import errorMiddleware from "./middlewares/errorMiddleware";
+import {errorMiddleware} from "@auth/ErrorMiddleware"
 import {User, connectToDb} from "@auth/mongo";
 import morgan from 'morgan';
 import session from 'express-session';
 import passport from 'passport';
 import cors from "cors";
+
 
 
 const app : Express = express();
@@ -55,8 +56,9 @@ app.get('/api', (req, res) => {
 const PORT : string = process.env.EMAIL_PORT ||  "3000";
 const HOST : string = process.env.HOST || "127.0.0.1";
 
+app.use(errorMiddleware);
+
 const server = app.listen(Number(PORT) ,HOST , () => {
-  app.use(errorMiddleware);
   console.log(`Listening on port ${PORT}`);
   
 });

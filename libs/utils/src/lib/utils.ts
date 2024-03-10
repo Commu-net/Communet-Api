@@ -22,5 +22,7 @@ class Apperror extends Error   {
       console.log(message);
       Error.captureStackTrace(this, this.constructor);
   }
+
+  
 }
 export  {Apperror , ApiResponse};

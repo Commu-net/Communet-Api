@@ -1,6 +1,7 @@
 import express  , {Express , Request , Response  } from 'express';
 import dotenv from 'dotenv';
 import cors from "cors";
+import { errorMiddleware } from '@auth/ErrorMiddleware';
 
 dotenv.config({
   path: '../../../.env',
@@ -108,7 +109,7 @@ app.get("/", (req: Request, res: Response) => {
 app.use("*", (req: Request, res: Response) => {
   res.send("404 Not Found");
 }) 
-// app.use(errorMiddleware)
+app.use(errorMiddleware)
 
 
 app.get('/', (req, res) => {

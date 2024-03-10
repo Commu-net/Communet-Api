@@ -23,6 +23,7 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 var import_express = __toESM(require("express"));
 var import_dotenv = __toESM(require("dotenv"));
 var import_cors = __toESM(require("cors"));
+var import_ErrorMiddleware = require("@auth/ErrorMiddleware");
 var import_mongo = require("@auth/mongo");
 var import_passport = __toESM(require("passport"));
 var import_userRoutes = __toESM(require("./routes/userRoutes"));
@@ -106,6 +107,7 @@ app.get("/", (req, res) => {
 app.use("*", (req, res) => {
   res.send("404 Not Found");
 });
+app.use(import_ErrorMiddleware.errorMiddleware);
 app.get("/", (req, res) => {
   res.send({ message: "Hello API" });
 });

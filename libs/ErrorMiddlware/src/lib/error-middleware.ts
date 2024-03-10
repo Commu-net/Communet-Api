@@ -5,19 +5,18 @@ interface ErrorMessage extends Error {
     status? : number
 }
 
-const errorMiddleware = (err: ErrorMessage, req: Request, res: Response, next: NextFunction) => {
+const errorMiddleware = (err: ErrorMessage, req: Request, res: Response) => {
     const status = err.status || 500;
     const message = err.message || "Something went Wrong";
-
+    console.log("error middle")
     console.log(message);
 
-    res.status(status).json({
+    return res.status(status).json({
         success: false,
         message: message,
         stack: err.stack
     });
 
-    next();
 }
 
 interface AuthRequest extends Request {

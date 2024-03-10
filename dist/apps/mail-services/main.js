@@ -509,35 +509,63 @@ exports.Apperror = Apperror;
 
 /***/ }),
 /* 17 */
-/***/ ((__unused_webpack_module, exports) => {
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const errorMiddleware = (err, req, res, next) => {
-    const errMsg = err.errMsg || "Error has occured";
-    const errStatus = err.errStatus || 500;
-    res.status(errStatus).json({
-        message: errMsg,
-        status: errStatus,
-    });
-};
-exports["default"] = errorMiddleware;
+const tslib_1 = __webpack_require__(1);
+tslib_1.__exportStar(__webpack_require__(18), exports);
 
 
 /***/ }),
 /* 18 */
-/***/ ((module) => {
+/***/ ((__unused_webpack_module, exports) => {
 
-module.exports = require("express-session");
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.authMiddleWare = exports.errorMiddleware = void 0;
+const errorMiddleware = (err, req, res) => {
+    const status = err.status || 500;
+    const message = err.message || "Something went Wrong";
+    console.log("error middle");
+    console.log(message);
+    return res.status(status).json({
+        success: false,
+        message: message,
+        stack: err.stack
+    });
+};
+exports.errorMiddleware = errorMiddleware;
+function authMiddleWare(req, res, next) {
+    console.log("auth middleware", req.user);
+    if (req.user) {
+        next();
+    }
+    else {
+        return res.status(401).json({
+            success: true,
+            message: "unauthorized"
+        });
+    }
+    return;
+}
+exports.authMiddleWare = authMiddleWare;
+
 
 /***/ }),
 /* 19 */
 /***/ ((module) => {
 
-module.exports = require("passport");
+module.exports = require("express-session");
 
 /***/ }),
 /* 20 */
+/***/ ((module) => {
+
+module.exports = require("passport");
+
+/***/ }),
+/* 21 */
 /***/ ((module) => {
 
 module.exports = require("cors");
@@ -585,11 +613,11 @@ const tslib_1 = __webpack_require__(1);
 const express_1 = tslib_1.__importDefault(__webpack_require__(2));
 const path = tslib_1.__importStar(__webpack_require__(3));
 const emailRoutes_1 = tslib_1.__importDefault(__webpack_require__(4));
-const errorMiddleware_1 = tslib_1.__importDefault(__webpack_require__(17));
+const ErrorMiddleware_1 = __webpack_require__(17);
 const mongo_1 = __webpack_require__(6);
-const express_session_1 = tslib_1.__importDefault(__webpack_require__(18));
-const passport_1 = tslib_1.__importDefault(__webpack_require__(19));
-const cors_1 = tslib_1.__importDefault(__webpack_require__(20));
+const express_session_1 = tslib_1.__importDefault(__webpack_require__(19));
+const passport_1 = tslib_1.__importDefault(__webpack_require__(20));
+const cors_1 = tslib_1.__importDefault(__webpack_require__(21));
 const app = (0, express_1.default)();
 (0, mongo_1.connectToDb)();
 const corsOptions = {
@@ -616,8 +644,8 @@ app.get('/api', (req, res) => {
 });
 const PORT = process.env.EMAIL_PORT || "3000";
 const HOST = process.env.HOST || "127.0.0.1";
+app.use(ErrorMiddleware_1.errorMiddleware);
 const server = app.listen(Number(PORT), HOST, () => {
-    app.use(errorMiddleware_1.default);
     console.log(`Listening on port ${PORT}`);
 });
 server.on('error', console.error);
