@@ -127,4 +127,3 @@ const getUserData = async (req, res, next) => {
   googleSuccess,
   logout
 });
-//# sourceMappingURL=user.controller.js.map

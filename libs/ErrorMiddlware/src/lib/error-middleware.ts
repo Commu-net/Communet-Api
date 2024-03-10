@@ -1,19 +1,21 @@
 import { Request, Response, NextFunction } from 'express';
 
-interface ErrorMessage{
+interface ErrorMessage extends Error{
     message? : string,
     status? : number
 }
 
 const errorMiddleware = (err: ErrorMessage, req: Request, res: Response) => {
 
-    const errMsg: string = err.message || "Error has occured";
-    const errStatus: number = err.status || 500;
-
-    res.status(errStatus).json({
-        message :  errMsg,
-        status : errStatus,
-    })
+  err.status = err.status || 500
+  console.log(err.message)
+  err.message  = err.message || "Something went Wrong"
+  res.status(err.status).json({
+      success:false,
+      message:err.message,
+      stack:err.stack
+      
+  })
 };
 
 
