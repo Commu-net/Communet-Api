@@ -22,8 +22,8 @@ router.route("/mail")
                     .delete(removeEmail)
                     .put(updateEmail);
 
-router.route("/store-mail")
-    .post( storeMail);
+router.route("/mail/store-mail")
+    .post(storeMail);
 
 
 export default router;

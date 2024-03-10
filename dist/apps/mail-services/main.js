@@ -38,7 +38,7 @@ router.route("/mail")
     .post(email_controllers_1.addEmail)
     .delete(email_controllers_1.removeEmail)
     .put(email_controllers_1.updateEmail);
-router.route("/store-mail")
+router.route("/mail/store-mail")
     .post(email_controllers_1.storeMail);
 exports["default"] = router;
 
