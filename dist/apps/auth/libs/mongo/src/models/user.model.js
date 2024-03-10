@@ -71,7 +71,8 @@ const userModel = new import_mongoose.default.Schema({
   },
   emailSelected: [{
     type: import_mongoose.default.Schema.Types.ObjectId,
-    ref: "Email"
+    ref: "Email",
+    unique: true
   }]
 });
 const emailModel = new import_mongoose.default.Schema({
