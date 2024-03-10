@@ -194,23 +194,24 @@ const getAllEmail = (req, res, next) => tslib_1.__awaiter(void 0, void 0, void 0
 exports.getAllEmail = getAllEmail;
 const addEmail = (req, res, next) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     try {
-        const userEmail = req.body.userEmail;
+        const userId = req.body.userId;
         const data = req.body.data;
-        if (!userEmail)
-            return next(new utils_1.Apperror("no userEmail provided", 404));
+        if (!userId)
+            return next(new utils_1.Apperror("no userId provided", 404));
         if (!data || data.length == 0)
             return next(new utils_1.Apperror("no data provided", 401));
-        const user = yield mongo_1.User.findOne({ email: userEmail });
+        const user = yield mongo_1.User.findById(userId);
         if (!user)
             return next(new utils_1.Apperror("no user found", 404));
         console.log(data);
+        const emails_added = [];
         for (const value of data) {
             let email = yield mongo_1.Email.findOne({ email: value.email });
             if (!email) {
                 email = yield mongo_1.Email.create(value);
                 yield email.save();
-                console.log(email._id);
                 user.emailSelected.push(email._id);
+                emails_added.push(Object.assign(Object.assign({}, value), { _id: email._id.toString() }));
             }
             else {
                 user.emailSelected = user.emailSelected.filter((value) => {
@@ -218,10 +219,12 @@ const addEmail = (req, res, next) => tslib_1.__awaiter(void 0, void 0, void 0, f
                         return true;
                 });
                 user.emailSelected.push(email._id);
+                emails_added.push(Object.assign(Object.assign({}, value), { _id: email._id.toString() }));
             }
         }
         yield user.save();
-        return new utils_1.ApiResponse(res, 200, "Emails added successfully");
+        console.log(emails_added);
+        return new utils_1.ApiResponse(res, 200, "Emails added", emails_added);
     }
     catch (error) {
         console.log(error);
@@ -231,18 +234,18 @@ const addEmail = (req, res, next) => tslib_1.__awaiter(void 0, void 0, void 0, f
 exports.addEmail = addEmail;
 const removeEmail = (req, res, next) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     try {
-        const userEmail = req.body.userEmail;
-        const deleteEmail = req.body.email;
-        const email = yield mongo_1.Email.findOne({ email: deleteEmail });
+        const userId = req.body.userId;
+        const deleteEmailId = req.body._id;
+        const email = yield mongo_1.Email.findById(deleteEmailId);
         if (!email) {
             return new utils_1.ApiResponse(res, 200, "Email not found");
         }
-        const user = yield mongo_1.User.findOne({ email: userEmail });
+        const user = yield mongo_1.User.findById(userId);
         if (!user) {
             return next(new utils_1.Apperror("User not found", 404));
         }
         user.emailSelected = user.emailSelected.filter((item) => item.toString() !== email._id.toString());
-        yield email.deleteOne({ email: deleteEmail });
+        yield mongo_1.Email.findByIdAndDelete(deleteEmailId);
         yield user.save();
         return new utils_1.ApiResponse(res, 200, "Email removed successfully");
     }
@@ -253,15 +256,16 @@ const removeEmail = (req, res, next) => tslib_1.__awaiter(void 0, void 0, void 0
 exports.removeEmail = removeEmail;
 const updateEmail = (req, res, next) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     try {
-        const userEmail = req.body.userEmail;
+        const userId = req.body.userId;
         const data = {
-            email: req.body.email,
-            currentDesignation: req.body.currentDesignation,
-            name: req.body.name,
-            company: req.body.company
+            _id: req.body.data._id,
+            email: req.body.data.email,
+            currentDesignation: req.body.data.currentDesignation,
+            name: req.body.data.name,
+            company: req.body.data.company
         };
-        const user = yield mongo_1.User.findOne({ email: userEmail });
-        const email = yield mongo_1.Email.findOne({ email: data.email });
+        const user = yield mongo_1.User.findById(userId);
+        const email = yield mongo_1.Email.findById(data._id);
         if (!user) {
             return next(new utils_1.Apperror("User not found", 404));
         }
@@ -270,7 +274,7 @@ const updateEmail = (req, res, next) => tslib_1.__awaiter(void 0, void 0, void 0
             user.emailSelected.push(newEmail._id);
             yield email.save();
             yield user.save();
-            return new utils_1.ApiResponse(res, 200, "Email added", null);
+            return new utils_1.ApiResponse(res, 200, "Email added", newEmail);
         }
         const updatedEmail = yield mongo_1.Email.findOneAndUpdate({ email: data.email }, data, { new: true });
         user.emailSelected.forEach((value, index) => {
@@ -279,7 +283,7 @@ const updateEmail = (req, res, next) => tslib_1.__awaiter(void 0, void 0, void 0
             }
         });
         yield user.save();
-        return new utils_1.ApiResponse(res, 200, "Email updated");
+        return new utils_1.ApiResponse(res, 200, "Email updated", updatedEmail);
     }
     catch (error) {
         console.log(error);

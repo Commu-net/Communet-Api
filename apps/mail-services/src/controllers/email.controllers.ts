@@ -108,13 +108,13 @@ export async function sendMass(req: RequestWithSession, res: Response, next: Nex
             }));
 
             return res.status(200).json({ "message": "Successful" });
-        } catch (error : any) {
-            return next(new Apperror("Token expired",401));
+        } catch (error: any) {
+            return next(new Apperror("Token expired", 401));
         }
     });
 }
 
-async function sendOneMail(mail: string, senderMail: string, fileNames: string[], subject: string, text: string, user: userInterface , next : NextFunction) {
+async function sendOneMail(mail: string, senderMail: string, fileNames: string[], subject: string, text: string, user: userInterface, next: NextFunction) {
     try {
         // Temporarily checking sending mail
 
@@ -159,68 +159,75 @@ async function sendOneMail(mail: string, senderMail: string, fileNames: string[]
 
     } catch (error: any) {
         console.log(2)
-        return next(new Apperror("Token expired",401));
+        return next(new Apperror("Token expired", 401));
     }
 }
 
 export const getAllEmail = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const userEmail : any = req.query.userEmail;
+        const userEmail: any = req.query.userEmail;
 
-        if(!userEmail) next(new Apperror("userEmail not missng",401));
+        if (!userEmail) next(new Apperror("userEmail not missng", 401));
 
         const user: userInterface | null = await User.findOne({ email: userEmail }).populate('emailSelected');
-        
-        if(!user) next(new Apperror("User not found",404));
+
+        if (!user) next(new Apperror("User not found", 404));
 
         return new ApiResponse(res, 200, "success", user.emailSelected);
 
-    } catch (error : any) {
+    } catch (error: any) {
         return next(new Apperror(error.message, 500));
     }
 }
 
 interface dataInterface {
-    email : string,
-    currentDesignation? : string,
-    name : string,
-    company? : string
+    email: string,
+    currentDesignation?: string,
+    name: string,
+    company?: string
+}
+
+interface emailAdded extends dataInterface {
+    _id: string
 }
 
 type postData = dataInterface;
 
 export const addEmail = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const userEmail: string = req.body.userEmail;
+        const userId: string = req.body.userId;
         const data: postData[] | null = req.body.data;
-        if (!userEmail) return next(new Apperror("no userEmail provided", 404));
+        if (!userId) return next(new Apperror("no userId provided", 404));
         if (!data || data.length == 0) return next(new Apperror("no data provided", 401));
 
-        const user: userInterface | null = await User.findOne({ email: userEmail });
+        const user: userInterface | null = await User.findById(userId);
 
         if (!user) return next(new Apperror("no user found", 404));
         console.log(data);
+        const emails_added: emailAdded[] = [];
         for (const value of data) {
-            
+
             let email: emailInterface | null = await Email.findOne({ email: value.email });
             if (!email) {
                 email = await Email.create(value);
                 await email.save();
-                console.log(email._id);
                 user.emailSelected.push(email._id);
+                emails_added.push({ ...value, _id: email._id.toString() });
             }
-            else{
+            else {
                 user.emailSelected = user.emailSelected.filter((value) => {
-                    if(value.toString() !== email._id.toString()) return true;
+                    if (value.toString() !== email._id.toString()) return true;
                 });
                 user.emailSelected.push(email._id);
-                
+                emails_added.push({ ...value, _id: email._id.toString() });
             }
         }
 
         await user.save();
 
-        return new ApiResponse(res, 200, "Emails added successfully");
+        console.log(emails_added)
+
+        return new ApiResponse(res, 200, "Emails added" , emails_added);
 
     } catch (error) {
         console.log(error);
@@ -231,23 +238,23 @@ export const addEmail = async (req: Request, res: Response, next: NextFunction) 
 
 export const removeEmail = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const userEmail: string = req.body.userEmail;
-        const deleteEmail: string = req.body.email;
+        const userId: string = req.body.userId;
+        const deleteEmailId: string = req.body._id;
 
-        const email: emailInterface = await Email.findOne({ email: deleteEmail });
+        const email: emailInterface = await Email.findById(deleteEmailId);
 
         if (!email) {
             return new ApiResponse(res, 200, "Email not found");
         }
-        const user: userInterface = await User.findOne({ email: userEmail });
+        const user: userInterface = await User.findById(userId);
 
         if (!user) {
             return next(new Apperror("User not found", 404));
         }
 
         user.emailSelected = user.emailSelected.filter((item) => item.toString() !== email._id.toString());
-        await email.deleteOne({ email: deleteEmail });
-        
+        await Email.findByIdAndDelete(deleteEmailId);
+
         await user.save();
 
         return new ApiResponse(res, 200, "Email removed successfully");
@@ -259,16 +266,17 @@ export const removeEmail = async (req: Request, res: Response, next: NextFunctio
 
 export const updateEmail = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const userEmail: string = req.body.userEmail;
-        const data = {
-            email: req.body.email as string,
-            currentDesignation: req.body.currentDesignation as string,
-            name: req.body.name as string,
-            company : req.body.company as string
+        const userId: string = req.body.userId;
+        const data : emailAdded = {
+            _id : req.body.data._id as string,
+            email: req.body.data.email as string,
+            currentDesignation: req.body.data.currentDesignation as string,
+            name: req.body.data.name as string,
+            company: req.body.data.company as string
         }
 
-        const user: userInterface | null = await User.findOne({ email: userEmail });
-        const email: emailInterface | null = await Email.findOne({ email: data.email });
+        const user: userInterface | null = await User.findById(userId);
+        const email: emailInterface | null = await Email.findById(data._id);
 
         if (!user) {
             return next(new Apperror("User not found", 404));
@@ -279,7 +287,7 @@ export const updateEmail = async (req: Request, res: Response, next: NextFunctio
             user.emailSelected.push(newEmail._id);
             await email.save();
             await user.save();
-            return new ApiResponse(res, 200, "Email added", null);
+            return new ApiResponse(res, 200, "Email added", newEmail);
         }
 
         const updatedEmail: emailInterface | null = await Email.findOneAndUpdate({ email: data.email }, data, { new: true });
@@ -290,7 +298,7 @@ export const updateEmail = async (req: Request, res: Response, next: NextFunctio
         });
         await user.save();
 
-        return new ApiResponse(res, 200, "Email updated");
+        return new ApiResponse(res, 200, "Email updated" , updatedEmail);
 
     } catch (error) {
         console.log(error);
@@ -302,11 +310,11 @@ export const updateEmail = async (req: Request, res: Response, next: NextFunctio
 
 export const storeMail = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        
-        console.log(req.user); 
-        const {emails } = req.body;
-        if(!emails) return next(new Apperror("Emails not found", 400)); 
-        return new ApiResponse(res, 200, "Emails stored successfully" , {emails});
+
+        console.log(req.user);
+        const { emails } = req.body;
+        if (!emails) return next(new Apperror("Emails not found", 400));
+        return new ApiResponse(res, 200, "Emails stored successfully", { emails });
     } catch (error) {
         return next(new Apperror(error.message, 400));
     }
