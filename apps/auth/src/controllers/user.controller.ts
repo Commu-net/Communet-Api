@@ -96,7 +96,8 @@ const logout = (req: any, res: Response, next: NextFunction) => {
             });
             return new ApiResponse(res , 200 , "Success" , {message : "You are logged out"});
           }  
-    } catch (error : any) {
+    } 
+    catch (error : any) {
         return next(new Apperror(error.message , 400));
     }
 }

@@ -96,6 +96,7 @@ interface emailI extends mongoose.Document {
     name?: string;
     currentDesignation?: string;
     addedOn?: Date;
+    company? : string;
 }
 
 

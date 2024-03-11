@@ -10,6 +10,7 @@ import { promisify } from "util";
 import { ApiResponse, Apperror } from "@auth/utils";
 import session from "express-session";
 import { appRootPath } from "nx/src/devkit-exports";
+import { MongooseError } from "mongoose";
 
 interface RequestWithSession extends Request {
     user: any;
@@ -297,23 +298,66 @@ export const updateEmail = async (req: Request, res: Response, next: NextFunctio
         if (!email) {
             const newEmail: emailInterface | null = await Email.create(data);
             user.emailSelected.push(newEmail._id);
-            await email.save();
+            await newEmail.save();
             await user.save();
             return new ApiResponse(res, 200, "Email added", newEmail);
         }
 
-        const updatedEmail: emailInterface | null = await Email.findOneAndUpdate({ email: data.email }, data, { new: true });
-        user.emailSelected.forEach((value, index) => {
-            if (value === updatedEmail?._id) {
-                user.emailSelected[index] = updatedEmail?._id;
-            }
-        });
-        await user.save();
+        // const updatedEmail: emailInterface  = await Email.findByIdAndUpdate({ _id: data._id }, {email : data.email ,currentDesignation : data.currentDesignation ,name : data.name ,company : data.company  }, { new: true });
+        // user.emailSelected.forEach((value, index) => {
+        //     if (value === updatedEmail?._id) {
+        //         user.emailSelected[index] = updatedEmail?._id;
+        //     }
+        // });
+        // await user.save();
 
-        return new ApiResponse(res, 200, "Email updated", updatedEmail);
+        const sameEmail : emailInterface | null = await Email.findOne({email : data.email});
+
+        if(!sameEmail){
+            email.email = data.email;
+            email.currentDesignation = data.currentDesignation;
+            email.company = data.company;
+            await email.save();
+            return new ApiResponse(res, 200, "Email updated", email);
+        }
+        else{
+            //if same email exists update it with that email 
+            if(!user.emailSelected.includes(sameEmail._id)) user.emailSelected = [...user.emailSelected , sameEmail._id];
+            
+            user.emailSelected = user.emailSelected.filter((value) => {
+                if (value.toString() !== email._id.toString()) return true;
+            });
+
+            user.emailSelected.push(sameEmail._id);
+            
+            await user.save();
+
+            return new ApiResponse(res, 200, "Email updated from existing mail", sameEmail);
+
+        }
+
+        return new ApiResponse(res, 200, "Email updated", null);
 
     } catch (error) {
-        console.log(error);
+        // if(error.code === 11000){
+        //     console.log("Duplicate key resolution");
+        //     const newEmail = req.body.data.email as string;
+        //     const userId = req.body.data.userId as string;
+        //     const email : emailInterface = await Email.findOne({email : newEmail});
+        //     const user : userInterface = await User.findById({_id : req.body.data.userId});
+
+        //     user.emailSelected.filter((value) => {
+        //         if(String(value).toString() !== userId){
+        //             return true;
+        //         }
+        //     });
+
+        //     user.emailSelected.push(email._id);
+
+        //     await user.save();
+
+        //     return new ApiResponse(res , 200 , "Replaced with existing entry of new email in database" , email);
+        // }
         return next(new Apperror(error.message, 500));
     }
 };
