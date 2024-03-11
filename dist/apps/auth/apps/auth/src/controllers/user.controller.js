@@ -61,10 +61,13 @@ const googleCallback = (req, res, next) => {
 };
 const googleSuccess = (req, res, next) => {
   try {
+    console.log(req.user);
+    console.log("in google success");
     const data = {
       email: req.user.email,
       name: req.user.name,
-      sub: req.user.sub
+      sub: req.user.sub,
+      id: req.user._id
     };
     const queryString = Object.entries(data).map(([key, val]) => `${key}=${encodeURIComponent(val)}`).join("&");
     return res.redirect(`${process.env.CLIENT_URL}?${queryString}`);
@@ -127,3 +130,4 @@ const getUserData = async (req, res, next) => {
   googleSuccess,
   logout
 });
+//# sourceMappingURL=user.controller.js.map

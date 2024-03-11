@@ -91,11 +91,9 @@ import_passport.default.use(new import_passport_google_oauth2.Strategy(
   }
 ));
 import_passport.default.serializeUser(function(user, done) {
-  console.log(user._id, "serial");
   done(null, user._id);
 });
 import_passport.default.deserializeUser(async function(id, done) {
-  console.log(id, "deserial");
   const user = await import_mongo2.User.findById(id);
   if (user) {
     return done(null, user);
@@ -116,3 +114,4 @@ const port = process.env.AUTH_PORT ? Number(process.env.AUTH_PORT) : 4e3;
 app.listen(port, host, () => {
   console.log(`[ ready ] http://${host}:${port}`);
 });
+//# sourceMappingURL=main.js.map

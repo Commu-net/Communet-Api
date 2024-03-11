@@ -174,6 +174,7 @@ async function sendOneMail(mail: string, senderMail: string, fileNames: string[]
     }
 }
 
+
 export const getAllEmail = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userEmail: any = req.query.userEmail;

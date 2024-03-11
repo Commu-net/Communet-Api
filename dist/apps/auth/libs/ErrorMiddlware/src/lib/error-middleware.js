@@ -49,3 +49,4 @@ function authMiddleWare(req, res, next) {
   authMiddleWare,
   errorMiddleware
 });
+//# sourceMappingURL=error-middleware.js.map

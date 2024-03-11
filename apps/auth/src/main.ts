@@ -42,7 +42,7 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
-// app.use(cors())
+
 app.use("/api/v1/user", userRoutes);
 
 
@@ -85,12 +85,10 @@ passport.use(new GoogleStrategy({
 ));
 
 passport.serializeUser(function(user: any, done: (error: any, id?: any) => void) {
-  console.log(user._id , "serial")
   done(null, user._id);
 });
 
 passport.deserializeUser(async function(id: any, done: (error: any, user?: any) => void) {
-  console.log(id , "deserial")
   const user = await User.findById(id);
   if (user) {
     return done(null, user);

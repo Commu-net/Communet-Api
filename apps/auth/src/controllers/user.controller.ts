@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import passport, { AuthenticateOptions } from "passport"; 
-import {Request , Response , NextFunction, urlencoded} from "express"; 
+import {Request , Response , NextFunction} from "express"; 
 
 import { ApiResponse, Apperror } from "@auth/utils";
 import { User, userInterface } from "@auth/mongo";
-import { Console } from "console";
 
 interface AuthOptions extends AuthenticateOptions{
     accessType? : string,
@@ -44,10 +43,12 @@ const googleCallback  =  (req : Request ,res : Response , next : NextFunction ) 
 const googleSuccess = (req : any , res : Response , next : NextFunction ) => {
     try {
         // console.log(req.user);
+        // console.log("in google success")
         const data = {
             email : req.user.email,
             name : req.user.name,
-            sub : req.user.sub
+            sub : req.user.sub,
+            id : req.user._id
         }   
 
         const queryString = Object.entries(data).map(([key, val]) => `${key}=${encodeURIComponent(val)}`).join('&');
