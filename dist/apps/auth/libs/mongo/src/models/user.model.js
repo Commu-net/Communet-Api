@@ -80,8 +80,7 @@ const emailModel = new import_mongoose.default.Schema({
     type: String,
     maxlength: 50,
     required: true,
-    trim: true,
-    unqiue: true
+    trim: true
   },
   name: {
     type: String,
@@ -108,4 +107,3 @@ const Email = import_mongoose.default.model("Email", emailModel);
   Email,
   User
 });
-//# sourceMappingURL=user.model.js.map

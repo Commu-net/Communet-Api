@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../../../../../libs/utils/src/lib/utils.ts"],
-  "sourcesContent": ["\r\nimport { Response } from \"express\";\r\nclass ApiResponse {\r\n    constructor( res  :Response , statusCode: number, message : string, data : object | null = null) {\r\n\r\n\r\n        res.status(statusCode).json({\r\n            statusCode,\r\n            message,\r\n            data\r\n        });\r\n        \r\n    }\r\n}\r\n\r\nclass Apperror extends Error   {\r\n  status: number;\r\n\r\n  constructor(message: string, status: number) {\r\n      super(message);\r\n      this.status = status;\r\n      console.log(message);\r\n      Error.captureStackTrace(this, this.constructor);\r\n  }\r\n\r\n  \r\n}\r\nexport  {Apperror , ApiResponse};\r\n"],
-  "mappings": ";;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAEA,MAAM,YAAY;AAAA,EACd,YAAa,KAAiB,YAAoB,SAAkB,OAAuB,MAAM;AAG7F,QAAI,OAAO,UAAU,EAAE,KAAK;AAAA,MACxB;AAAA,MACA;AAAA,MACA;AAAA,IACJ,CAAC;AAAA,EAEL;AACJ;AAEA,MAAM,iBAAiB,MAAQ;AAAA,EAG7B,YAAY,SAAiB,QAAgB;AACzC,UAAM,OAAO;AACb,SAAK,SAAS;AACd,YAAQ,IAAI,OAAO;AACnB,UAAM,kBAAkB,MAAM,KAAK,WAAW;AAAA,EAClD;AAGF;",
-  "names": []
-}

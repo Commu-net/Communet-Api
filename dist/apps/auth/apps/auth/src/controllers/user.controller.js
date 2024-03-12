@@ -61,8 +61,6 @@ const googleCallback = (req, res, next) => {
 };
 const googleSuccess = (req, res, next) => {
   try {
-    console.log(req.user);
-    console.log("in google success");
     const data = {
       email: req.user.email,
       name: req.user.name,
@@ -130,4 +128,3 @@ const getUserData = async (req, res, next) => {
   googleSuccess,
   logout
 });
-//# sourceMappingURL=user.controller.js.map

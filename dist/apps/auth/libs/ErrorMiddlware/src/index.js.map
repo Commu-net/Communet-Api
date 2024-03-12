@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../../../../libs/ErrorMiddlware/src/index.ts"],
-  "sourcesContent": ["export * from './lib/error-middleware';\r\n"],
-  "mappings": ";;;;;;;;;;;;;;AAAA;AAAA;AAAA,wBAAc,mCAAd;",
-  "names": []
-}

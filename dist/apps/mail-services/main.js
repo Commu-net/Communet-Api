@@ -277,7 +277,8 @@ const updateEmail = (req, res, next) => tslib_1.__awaiter(void 0, void 0, void 0
             return next(new utils_1.Apperror("User not found", 404));
         }
         if (!email) {
-            const newEmail = yield mongo_1.Email.create(data);
+            const { _id } = data, datawithoutId = tslib_1.__rest(data, ["_id"]);
+            const newEmail = yield mongo_1.Email.create(datawithoutId);
             user.emailSelected.push(newEmail._id);
             yield newEmail.save();
             yield user.save();
@@ -308,7 +309,7 @@ const updateEmail = (req, res, next) => tslib_1.__awaiter(void 0, void 0, void 0
         //     await user.save();
         //     return new ApiResponse(res, 200, "Email updated from existing mail", sameEmail);
         // }
-        return new utils_1.ApiResponse(res, 200, "Email updated", null);
+        return new utils_1.ApiResponse(res, 200, "Email updated", updatedEmail);
     }
     catch (error) {
         // if(error.code === 11000){

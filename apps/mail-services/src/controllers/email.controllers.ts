@@ -296,14 +296,15 @@ export const updateEmail = async (req: Request, res: Response, next: NextFunctio
         }
 
         if (!email) {
-            const newEmail: emailInterface | null = await Email.create(data);
+            const { _id , ...datawithoutId} = data;
+            const newEmail: emailInterface | null = await Email.create(datawithoutId);
             user.emailSelected.push(newEmail._id);
             await newEmail.save();
             await user.save();
             return new ApiResponse(res, 200, "Email added", newEmail);
         }
 
-        const updatedEmail: emailInterface  = await Email.findByIdAndUpdate({ _id: data._id }, {email : data.email ,currentDesignation : data.currentDesignation ,name : data.name ,company : data.company  }, { new: true });
+        const updatedEmail: emailInterface  = await Email.findByIdAndUpdate({ _id: data._id }, {email : data.email ,currentDesignation : data.currentDesignation ,name : data.name ,company : data.company  } ,{new : true});
         user.emailSelected.forEach((value, index) => {
             if (value === updatedEmail?._id) {
                 user.emailSelected[index] = updatedEmail?._id;
@@ -336,7 +337,7 @@ export const updateEmail = async (req: Request, res: Response, next: NextFunctio
 
         // }
 
-        return new ApiResponse(res, 200, "Email updated", null);
+        return new ApiResponse(res, 200, "Email updated", updatedEmail);
 
     } catch (error) {
         // if(error.code === 11000){
