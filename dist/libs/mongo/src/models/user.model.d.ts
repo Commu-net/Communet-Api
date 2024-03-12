@@ -41,6 +41,7 @@ interface emailI extends mongoose.Document {
     name?: string;
     currentDesignation?: string;
     addedOn?: Date;
+    company?: string;
 }
 type userInterface = userI;
 type emailInterface = emailI;

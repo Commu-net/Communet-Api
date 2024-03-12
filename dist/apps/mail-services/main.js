@@ -283,33 +283,31 @@ const updateEmail = (req, res, next) => tslib_1.__awaiter(void 0, void 0, void 0
             yield user.save();
             return new utils_1.ApiResponse(res, 200, "Email added", newEmail);
         }
-        // const updatedEmail: emailInterface  = await Email.findByIdAndUpdate({ _id: data._id }, {email : data.email ,currentDesignation : data.currentDesignation ,name : data.name ,company : data.company  }, { new: true });
-        // user.emailSelected.forEach((value, index) => {
-        //     if (value === updatedEmail?._id) {
-        //         user.emailSelected[index] = updatedEmail?._id;
-        //     }
-        // });
-        // await user.save();
-        const sameEmail = yield mongo_1.Email.findOne({ email: data.email });
-        if (!sameEmail) {
-            email.email = data.email;
-            email.currentDesignation = data.currentDesignation;
-            email.company = data.company;
-            yield email.save();
-            return new utils_1.ApiResponse(res, 200, "Email updated", email);
-        }
-        else {
-            //if same email exists update it with that email 
-            if (!user.emailSelected.includes(sameEmail._id))
-                user.emailSelected = [...user.emailSelected, sameEmail._id];
-            user.emailSelected = user.emailSelected.filter((value) => {
-                if (value.toString() !== email._id.toString())
-                    return true;
-            });
-            user.emailSelected.push(sameEmail._id);
-            yield user.save();
-            return new utils_1.ApiResponse(res, 200, "Email updated from existing mail", sameEmail);
-        }
+        const updatedEmail = yield mongo_1.Email.findByIdAndUpdate({ _id: data._id }, { email: data.email, currentDesignation: data.currentDesignation, name: data.name, company: data.company }, { new: true });
+        user.emailSelected.forEach((value, index) => {
+            if (value === (updatedEmail === null || updatedEmail === void 0 ? void 0 : updatedEmail._id)) {
+                user.emailSelected[index] = updatedEmail === null || updatedEmail === void 0 ? void 0 : updatedEmail._id;
+            }
+        });
+        yield user.save();
+        // const sameEmail : emailInterface | null = await Email.findOne({email : data.email});
+        // if(!sameEmail){
+        //     email.email = data.email;
+        //     email.currentDesignation = data.currentDesignation;
+        //     email.company = data.company;
+        //     await email.save();
+        //     return new ApiResponse(res, 200, "Email updated", email);
+        // }
+        // else{
+        //     //if same email exists update it with that email 
+        //     if(!user.emailSelected.includes(sameEmail._id)) user.emailSelected = [...user.emailSelected , sameEmail._id];
+        //     user.emailSelected = user.emailSelected.filter((value) => {
+        //         if (value.toString() !== email._id.toString()) return true;
+        //     });
+        //     user.emailSelected.push(sameEmail._id);
+        //     await user.save();
+        //     return new ApiResponse(res, 200, "Email updated from existing mail", sameEmail);
+        // }
         return new utils_1.ApiResponse(res, 200, "Email updated", null);
     }
     catch (error) {
@@ -466,7 +464,6 @@ const emailModel = new mongoose_1.default.Schema({
         maxlength: 50,
         required: true,
         trim: true,
-        unqiue: true
     },
     name: {
         type: String,

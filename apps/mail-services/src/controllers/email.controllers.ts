@@ -303,38 +303,38 @@ export const updateEmail = async (req: Request, res: Response, next: NextFunctio
             return new ApiResponse(res, 200, "Email added", newEmail);
         }
 
-        // const updatedEmail: emailInterface  = await Email.findByIdAndUpdate({ _id: data._id }, {email : data.email ,currentDesignation : data.currentDesignation ,name : data.name ,company : data.company  }, { new: true });
-        // user.emailSelected.forEach((value, index) => {
-        //     if (value === updatedEmail?._id) {
-        //         user.emailSelected[index] = updatedEmail?._id;
-        //     }
-        // });
-        // await user.save();
+        const updatedEmail: emailInterface  = await Email.findByIdAndUpdate({ _id: data._id }, {email : data.email ,currentDesignation : data.currentDesignation ,name : data.name ,company : data.company  }, { new: true });
+        user.emailSelected.forEach((value, index) => {
+            if (value === updatedEmail?._id) {
+                user.emailSelected[index] = updatedEmail?._id;
+            }
+        });
+        await user.save();
 
-        const sameEmail : emailInterface | null = await Email.findOne({email : data.email});
+        // const sameEmail : emailInterface | null = await Email.findOne({email : data.email});
 
-        if(!sameEmail){
-            email.email = data.email;
-            email.currentDesignation = data.currentDesignation;
-            email.company = data.company;
-            await email.save();
-            return new ApiResponse(res, 200, "Email updated", email);
-        }
-        else{
-            //if same email exists update it with that email 
-            if(!user.emailSelected.includes(sameEmail._id)) user.emailSelected = [...user.emailSelected , sameEmail._id];
+        // if(!sameEmail){
+        //     email.email = data.email;
+        //     email.currentDesignation = data.currentDesignation;
+        //     email.company = data.company;
+        //     await email.save();
+        //     return new ApiResponse(res, 200, "Email updated", email);
+        // }
+        // else{
+        //     //if same email exists update it with that email 
+        //     if(!user.emailSelected.includes(sameEmail._id)) user.emailSelected = [...user.emailSelected , sameEmail._id];
             
-            user.emailSelected = user.emailSelected.filter((value) => {
-                if (value.toString() !== email._id.toString()) return true;
-            });
+        //     user.emailSelected = user.emailSelected.filter((value) => {
+        //         if (value.toString() !== email._id.toString()) return true;
+        //     });
 
-            user.emailSelected.push(sameEmail._id);
+        //     user.emailSelected.push(sameEmail._id);
             
-            await user.save();
+        //     await user.save();
 
-            return new ApiResponse(res, 200, "Email updated from existing mail", sameEmail);
+        //     return new ApiResponse(res, 200, "Email updated from existing mail", sameEmail);
 
-        }
+        // }
 
         return new ApiResponse(res, 200, "Email updated", null);
 
