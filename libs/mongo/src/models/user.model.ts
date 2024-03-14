@@ -46,7 +46,6 @@ const userModel = new  mongoose.Schema({
     emailSelected: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Email', 
-        unique : true
     }]
     
 });
