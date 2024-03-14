@@ -34,7 +34,7 @@ interface userI extends mongoose.Document {
     acessToken?: string;
     rToken?: string;
     id?: string;
-    emailSelected?: mongoose.Schema.Types.ObjectId[] | null;
+    emailSelected?: mongoose.Schema.Types.ObjectId[];
 }
 interface emailI extends mongoose.Document {
     email: string;

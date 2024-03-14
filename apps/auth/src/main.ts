@@ -14,7 +14,7 @@ import morgan from "morgan" ;
 
 import session from "express-session"
 import { Apperror } from '@auth/utils';
-import {User} from "@auth/mongo"
+import {User} from "@auth/mongo";
 import {Strategy as GoogleStrategy, VerifyCallback } from "passport-google-oauth2"
 
 connectToDb();
