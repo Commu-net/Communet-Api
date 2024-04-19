@@ -32,15 +32,15 @@ services:
     networks:
       - backend
 
-  extract-service:
-    container_name: "extract-service"
-    build:
-      context: ./apps/extract-service
-      dockerfile: Dockerfile
-    env_file:
-      - .env
-    networks:
-      - backend
+  # extract-service:
+  #   container_name: "extract-service"
+  #   build:
+  #     context: ./apps/extract-service
+  #     dockerfile: Dockerfile
+  #   env_file:
+  #     - .env
+  #   networks:
+  #     - backend
 
 networks:
   backend:

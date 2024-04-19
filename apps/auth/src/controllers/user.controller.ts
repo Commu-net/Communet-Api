@@ -49,7 +49,11 @@ const googleSuccess = (req : any , res : Response , next : NextFunction ) => {
             name : req.user.name,
             sub : req.user.sub,
             id : req.user._id
-        }   
+        }
+        
+        Object.entries(data).map(([key , val]) => {
+            
+        });
 
         const queryString = Object.entries(data).map(([key, val]) => `${key}=${encodeURIComponent(val)}`).join('&');
 

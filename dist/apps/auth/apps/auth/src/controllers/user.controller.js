@@ -67,6 +67,8 @@ const googleSuccess = (req, res, next) => {
       sub: req.user.sub,
       id: req.user._id
     };
+    Object.entries(data).map(([key, val]) => {
+    });
     const queryString = Object.entries(data).map(([key, val]) => `${key}=${encodeURIComponent(val)}`).join("&");
     return res.redirect(`${process.env.CLIENT_URL}?${queryString}`);
   } catch (error) {
@@ -128,3 +130,4 @@ const getUserData = async (req, res, next) => {
   googleSuccess,
   logout
 });
+//# sourceMappingURL=user.controller.js.map
